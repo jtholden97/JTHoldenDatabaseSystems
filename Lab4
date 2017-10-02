@@ -1,0 +1,68 @@
+--James Holden
+-- Database Management
+
+
+--1
+SELECT city
+FROM agents
+WHERE aid in (SELECT aid
+		FROM orders
+		WHERE cid in 
+			(SELECT cid
+			FROM customers
+			WHERE cid = ‘c006’));
+
+--2
+SELECT distinct pid
+FROM orders
+WHERE aid in (SELECT aid
+FROM orders
+	WHERE cid in (SELECT cid 
+FROM customers
+WHERE city = ‘Beijing’))
+ORDER BY pid DESC
+
+--3
+SELECT cid, name
+FROM customers
+Where cid  NOT in (SELECT cid
+		FROM orders
+		WHERE aid = ‘a03’
+);
+
+--4
+
+SELECT DISTINCT cid
+FROM Customers
+WHERE cid in (SELECT cid
+FROM Orders
+WHERE pid = ‘p01’ and pid = ‘p07’)
+ORDER BY cid ASC;
+
+--5
+SELECT DISTINCT pid
+FROM Orders
+WHERE pid NOT in (SELECT cid
+FROM orders
+WHERE aid IN (‘a02’, ‘a03’)
+)
+ORDER BY pid DESC;
+
+--6
+SELECT name, discountPct, city
+FROM customers
+WHERE cid IN (SELECT cid
+FROM orders
+WHERE aid in (SELECT aid
+FROM agents
+WHERE city IN (‘Tokyo’, ‘New York’)
+)
+);
+
+--7
+SELECT * 
+FROM customers
+WHERE discount in (SELECT discount
+FROM customers
+WHERE city in (‘Duluth’, ‘London’)
+);
