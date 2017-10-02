@@ -1,0 +1,13 @@
+Check constraints
+
+The CHECK constraint is used to limit a column to certain range or string of characters. This is especially good for an age column where 
+the age is 18+, or where the column must be a yes or no answer. The example syntax of these is:
+CHECK (Age>=18)
+
+And 
+
+CHECK (USCitizen = ‘Yes’ or USCitizen = ‘No’)
+
+A bad check constraint would be if a check constraint was put on a first name column. There aren’t many situations where it would make 
+sense to do this. There are far too many names in America for this to make sense. These constraints are useful so that unwanted data is 
+not inserted into certain columns of a table. 
