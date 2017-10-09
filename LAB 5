@@ -1,0 +1,65 @@
+--James Holden Lab 5
+-- 10/08/2017
+
+--1
+SELECT DISTINCT city
+FROM Agents
+JOIN Orders
+ON Orders.aid = Agents.aid
+WHERE Orders.cid = 'c006';
+
+ -----------
+
+--2
+SELECT DISTINCT ord2.pid
+FROM customers c, orders ord1 FULL OUTER JOIN orders ord2 ON ord1.aid = ord2.aid
+WHERE c.city = 'Beijing'
+AND c.cid  = ord1.cid
+ORDER BY ord2.pid DESC;
+
+
+-----------------
+
+--3
+SELECT name
+FROM customers
+WHERE cid not in (select cid
+FROM orders);
+ -----------------
+
+ --#4
+SELECT name
+FROM customers
+WHERE cid not in (select customers.cid
+FROM customers right outer JOIN orders ON orders.cid = customers.cid
+                 );
+
+-----------------------
+
+--5
+SELECT customers.name, agents.name
+FROM customers, orders, agents
+WHERE orders.cid = customers.cid
+ AND orders.aid = agents.aid
+ AND agents.city = customers.city;
+ -----------
+
+
+
+--6
+SELECT customers.name, agents.name, customers.city, agents.city 
+FROM customers, agents
+WHERE customers.city = agents.city;
+
+
+ -----------
+
+--7
+SELECT name, city 
+FROM customers
+WHERE city in (SELECT city
+FROM products 
+GROUP BY city
+ORDER BY COUNT(pid) ASC
+limit 1);
+ -----------
