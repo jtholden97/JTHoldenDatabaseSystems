@@ -1,0 +1,83 @@
+-- James Holden --
+-- 10/15/2017 --
+-- Lab #6 --
+
+
+-- 1 --
+
+SELECT name, city
+FROM Customers
+WHERE city IN (SELECT city
+FROM Products
+	GROUP BY city
+	ORDER BY COUNT(pid) ASC
+	LIMIT 1
+); 
+
+
+
+
+-- 2 --
+
+SELECT name
+FROM products
+WHERE priceUSD >= (select avg(priceUSD)
+	FROM products
+)
+order by name desc;
+
+
+
+-- 3 --
+
+SELECT customers.name, orders.pid, orders.totalUSD
+FROM customers, orders
+WHERE orders.cid = customers.cid
+ORDER by orders.totalUSD asc;
+
+-- 4 --
+
+
+SELECT customers.name, coalesce(sum(orders.quantity), 0) 
+FROM customers
+LEFT OUTER JOIN orders ON customers.cid = orders.cid
+GROUP BY customers.name
+ORDER BY customers.name desc;
+
+-- 5 --
+
+SELECT customers.name, products.name, agents.name
+FROM customers, orders, products, agents
+WHERE orders.cid = customers.cid
+AND orders.pid = products.pid
+AND orders.aid = agents.aid
+AND agents.city = 'Newark';
+
+-- 6 --
+
+SELECT *
+FROM orders, customers, products
+WHERE orders.cid = customers.cid
+AND orders.pid = products.pid
+AND orders.totalUSD != (products.priceUSD * orders.quantity * ((100 - customers.discountpct) / 100));
+
+-- 7 --
+
+--A right outer join returns all values from the “right table” and any matching values from the “left --table”, while a left outer join returns all values from the right table and matching values from --the right table. The right or left in this case is simply what order the SQL query is in. 
+
+--An example of a left outer join is:
+
+SELECT customers.cid
+FROM orders
+LEFT OUTER JOIN customers on orders.cid = customers.cid;
+
+--An example of a right outer join is:
+
+SELECT customers.cid
+FROM orders
+RIGHT OUTER JOIN customers on orders.cid = customers.cid;
+
+
+--The rest of the query is the same, the only part that differs is whether it is a left or right join. --This means that the table that the matches are pulled from is changed from the two queries. 
+
+
