@@ -1,0 +1,148 @@
+﻿drop table if exists actors;
+drop table if exists directors;
+drop table if exists cst;
+drop table if exists movies;
+drop table if exists people;
+
+
+
+
+--people table, ties all people together
+
+
+Create table People (
+          PID                 char(4) NOT NULL,
+        fName                text,
+        lName                 text,
+        address        text,
+spouseName         text,
+          PRIMARY KEY (PID)
+);
+
+
+-- actors table 
+Create table actors (
+        PID                 char(4) NOT NULL references people(pid),
+        birthDate         date,
+        hairColor         text,
+        eyeColor         text,
+        height                 integer,
+        weight                integer,
+        favColor        text,
+        SAGADate        date,
+          PRIMARY KEY (PID)
+);
+
+
+-- Movies Table
+Create table Movies (
+name                text,
+releaseYear        int,
+MPAA                int NOT NULL,
+DBOS                text,
+FBOS                text,
+        bluRaySales        text,
+        PRIMARY KEY (MPAA)
+);
+
+
+--Directors Table
+Create table Directors (
+
+
+
+
+PID                         char(4) NOT NULL references People(PID),
+filmSchoolAttended         text,
+DGADate                 date,
+favoriteLensMaker         text,
+PRIMARY KEY (PID)
+);
+
+
+
+
+--Cast Table
+Create table Cst (
+PID                 char(4) NOT NULL  references People(PID),
+MPAA                int NOT NULL references Movies(MPAA),
+role                 text,
+PRIMARY KEY (PID, role)
+
+
+); 
+
+
+--random made up data--
+
+
+insert into people (pid, fName, lName, address, spouseName)
+             Values ('a001', 'chris', 'goro', 'bayside st', 'Tucci');
+
+
+
+
+insert into people (pid, fName, lName, address, spouseName)
+             Values ('a002', 'Charlie', 'Day', 'smith street', 'the waitress');
+
+
+insert into actors (pid, birthDate, hairColor, eyeColor, height, weight, favColor, SAGADate)
+             Values ('a002', '1975-05-13', 'brown', 'brown', '70', '170', 'blue', '1997-06-21');
+
+
+insert into people (pid, fName, lName, address, spouseName)
+             Values ('a003', 'Roger', 'Moore', 'fulton ave', 'Julia Moore');
+
+
+insert into actors (pid, birthDate, hairColor, eyeColor, height, weight, favColor, SAGADate)
+             Values ('a003', '1975-07-13', 'brown', 'blonde', '73', '165', 'red', '2000-03-27');  
+
+
+insert into people (pid, fName, lName, address, spouseName)
+             Values ('a004', 'JT', 'Holden', 'Poplar st', 'Anastasia');
+             
+insert into Directors(PID, filmSchoolAttended, DGADate, favoriteLensMaker)
+                Values('a004', 'Marist', '2000-07-17', 'lens4less');
+
+
+insert into Movies(name, releaseYear, MPAA, DBOS, FBOS, bluRaySales)
+                Values('Stepbrothers', 2000, 127, '5000', '5000', '8000');
+                
+insert into Cst(PID, MPAA, role)
+                Values('a004', 127, 'Director');
+
+
+insert into Cst(PID, MPAA, role)
+                Values('a003', 127, 'Actor');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--Select directors with whom Roger Moore has worked
+
+
+SELECT people.fName, people.lName
+FROM people 
+INNER JOIN Cst ON people.pid = Cst.pid
+WHERE role = 'Director'
+AND Cst.MPAA IN ( 
+        SELECT        Cst.mpaa
+        FROM Cst
+        INNER JOIN People ON People.PID = Cst.PID
+        WHERE People.fName = 'Roger'
+        AND People.lName = 'Moore'
+ );
